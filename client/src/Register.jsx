@@ -6,15 +6,41 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(form);
+  };
   return (
-    <form>
-      <input name="name" placeholder="Name" />
-      <input name="email" placeholder="Email" />
-      <input type="password" name="password" placeholder="Password" />
+    <form onSubmit={handleSubmit}>
+      <input
+        name="name"
+        value={form.name}
+        placeholder="Name"
+        onChange={handleChange}
+      />
+      <input
+        name="email"
+        value={form.email}
+        placeholder="Email"
+        onChange={handleChange}
+      />
+      <input
+        type="password"
+        name="password"
+        value={form.password}
+        placeholder="Password"
+        onChange={handleChange}
+      />
       <input
         type="password"
         name="confirmPassword"
+        value={form.confirmPassword}
         placeholder="Confirm Password"
+        onChange={handleChange}
       />
       <button type="submit">Register</button>
     </form>
