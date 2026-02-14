@@ -1,10 +1,13 @@
 import { useState } from "react";
 import EmployeeTable from "./EmployeeTable";
+import EmployeeForm from "./EmployeeForm";
 
-const SearchFilter = ({ employees = [] }) => {
+const SearchFilter = ({ employees = [], onDelete, onPost, onUpdate }) => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
   const [sorting, setSorting] = useState("select");
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [editingEmployee, setEditingEmployee] = useState(null);
   let filteredData =
     filter === "all"
       ? employees
@@ -50,8 +53,32 @@ const SearchFilter = ({ employees = [] }) => {
         <option value="name">name</option>
         <option value="salary">salary</option>
       </select>
-      <button>Add Employee</button>
-      <EmployeeTable employees={filteredData} />
+      <button onClick={() => setShowAddForm(true)}>Add Employee</button>
+      {showAddForm && (
+        <EmployeeForm
+          onSubmit={(data) => {
+            onPost(data);
+            setShowAddForm(false);
+          }}
+          onCancel={() => setShowAddForm(false)}
+        />
+      )}
+
+      {editingEmployee && (
+        <EmployeeForm
+          initialData={editingEmployee}
+          onSubmit={(data) => {
+            onUpdate(editingEmployee.id, data);
+            setEditingEmployee(null);
+          }}
+          onCancel={() => setEditingEmployee(null)}
+        />
+      )}
+      <EmployeeTable
+        employees={filteredData}
+        onDelete={onDelete}
+        onUpdate={setEditingEmployee}
+      />
     </div>
   );
 };

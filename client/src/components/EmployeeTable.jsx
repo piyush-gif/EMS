@@ -1,4 +1,4 @@
-const EmployeeTable = ({ employees = [] }) => {
+const EmployeeTable = ({ employees = [], onDelete, onUpdate }) => {
   return (
     <table>
       <thead>
@@ -25,8 +25,8 @@ const EmployeeTable = ({ employees = [] }) => {
                 <td>{emp.salary}</td>
                 <td>{emp.created_at}</td>
                 <td>
-                  <button>Edit</button>
-                  <button>Delete</button>
+                  <button onClick={() => onUpdate(emp)}>Edit</button>
+                  <button onClick={() => onDelete(emp.id)}>Delete</button>
                 </td>
               </tr>
             );
