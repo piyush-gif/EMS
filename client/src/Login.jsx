@@ -1,25 +1,61 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [form, setForm] = useState({
-    username: "",
-    password: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const validate = () => {
+    if (!email.trim()) return "Email is required";
+    if (!password.trim()) return "Password is required";
+    return null;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("submitted");
+  const handleLogin = async () => {
+    setError("");
+
+    const validationError = validate();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:8000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error("Login failed");
+
+      localStorage.setItem("token", data.access_token);
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="username" value={form.username} onChange={handleChange} />
-      <input name="password" value={form.password} onChange={handleChange} />
-      <button type="submit">Login</button>
-    </form>
+    <div>
+      <input
+        value={email}
+        placeholder="email"
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        value={password}
+        type="password"
+        placeholder="password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={handleLogin}>Login</button>
+    </div>
   );
 };
 
