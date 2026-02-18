@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Header
 from database import engine, get_db
 from models import Base
 from sqlalchemy.orm import Session
@@ -6,7 +6,7 @@ from schemas.user import UserRegister
 from models import User
 import bcrypt
 from schemas.employee import UserLogin
-
+from utils.security import create_access_token, create_refresh_token, verify_token 
 from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
@@ -14,45 +14,60 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"], 
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 @app.get("/")
 def root():
-  return {"message" : "Hello World"}
-
+    return {"message": "Hello World"}
 
 
 @app.post("/register")
-def post_register(user : UserRegister, db: Session = Depends(get_db)):
+def post_register(user: UserRegister, db: Session = Depends(get_db)):
+    hashed = bcrypt.hashpw(user.password.encode("utf-8"), bcrypt.gensalt())
+    new_user = User(
+        name=user.name,
+        email=user.email,
+        password=hashed.decode("utf-8")
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return {"message": "Registered", "id": new_user.id}
 
-  hashed = bcrypt.hashpw(user.password.encode("utf-8"), bcrypt.gensalt())
-  new_user = User(
-    name=user.name,
-    email= user.email,
-    password=hashed.decode("utf-8")
-  )
-  db.add(new_user)
-  db.commit()
-  db.refresh(new_user)
-
-  return {"message": "Registered", "id": new_user.id}
-
-  
 
 @app.post("/login")
 def post_login(user: UserLogin, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.email == user.email).first()
 
-  db_user = db.query(User).filter(User.email == user.email).first()
-
-  if not db_user:
-    raise HTTPException(status_code=401, detail="Invalid email or password")
-  
-  is_valid = bcrypt.checkpw(user.password.encode("utf-8"), db_user.password.encode("utf-8"))
-
-  if not is_valid:
+    if not db_user:
         raise HTTPException(status_code=401, detail="Invalid email or password")
-    
-  return {"message": "Login successful", "id": db_user.id}
+
+    is_valid = bcrypt.checkpw(user.password.encode("utf-8"), db_user.password.encode("utf-8"))
+
+    if not is_valid:
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+
+    access_token = create_access_token(data={"sub": str(db_user.id)})
+    refresh_token = create_refresh_token(data={"sub": str(db_user.id)})
+
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer"
+    }
+
+
+@app.post("/refresh")
+def refresh(authorization: str = Header(...)):
+    token = authorization.replace("Bearer ", "")
+    payload = verify_token(token)
+
+    if not payload or payload.get("type") != "refresh":
+        raise HTTPException(status_code=401, detail="Invalid refresh token")
+
+    new_access_token = create_access_token(data={"sub": payload["sub"]})
+    return {"access_token": new_access_token, "token_type": "bearer"}
