@@ -18,7 +18,7 @@ const HomePage = () => {
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
       <SearchFilter
-        employees={employees}
+        employees={employees || []}
         onDelete={handleDelete}
         onPost={handlePost}
         onUpdate={handleUpdate}

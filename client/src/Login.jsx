@@ -24,7 +24,7 @@ const Login = () => {
     }
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:8000/auth/login", {
+      const response = await fetch("http://localhost:8000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -33,7 +33,8 @@ const Login = () => {
       const data = await response.json();
       if (!response.ok) throw new Error("Login failed");
 
-      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
       navigate("/");
     } catch (err) {
       setError(err.message);
