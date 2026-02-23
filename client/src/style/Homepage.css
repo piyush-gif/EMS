@@ -1,0 +1,15 @@
+.homepage {
+  padding: 40px;
+}
+
+.homepage .status {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .homepage {
+    padding: 20px;
+  }
+}
