@@ -21,7 +21,7 @@ const EmployeeForm = ({ onSubmit, onCancel, initialData = null }) => {
     onSubmit(employeeData);
   };
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="employee-form" onSubmit={handleSubmit}>
       <input
         value={name}
         placeholder="Name"
@@ -40,18 +40,20 @@ const EmployeeForm = ({ onSubmit, onCancel, initialData = null }) => {
       />
       <input
         value={designation}
-        placeholder="designation"
+        placeholder="Designation"
         onChange={(e) => setDesignation(e.target.value)}
       />
       <input
         value={salary}
-        placeholder="salary"
+        placeholder="Salary"
         onChange={(e) => setSalary(e.target.value)}
       />
-      <button type="submit">Submit</button>
-      <button type="button" onClick={onCancel}>
-        Cancel
-      </button>
+      <div className="form-actions">
+        <button type="submit">Submit</button>
+        <button type="button" className="btn-cancel" onClick={onCancel}>
+          Cancel
+        </button>
+      </div>
     </form>
   );
 };

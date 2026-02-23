@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EmployeeTable from "./EmployeeTable";
 import EmployeeForm from "./EmployeeForm";
 
@@ -8,6 +8,12 @@ const SearchFilter = ({ employees = [], onDelete, onPost, onUpdate }) => {
   const [sorting, setSorting] = useState("select");
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, filter, sorting]);
   let filteredData =
     filter === "all"
       ? employees
@@ -35,25 +41,38 @@ const SearchFilter = ({ employees = [], onDelete, onPost, onUpdate }) => {
       return a.name.localeCompare(b.name);
     });
   }
-  return (
-    <div>
-      <input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search name, email, phone"
-      />
-      <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-        <option value="all">All</option>
-        <option value="Software Engineer">Software Engineer</option>
-        <option value="Project Manager">Project Manager</option>
-      </select>
 
-      <select value={sorting} onChange={(e) => setSorting(e.target.value)}>
-        <option value="select">Select</option>
-        <option value="name">name</option>
-        <option value="salary">salary</option>
-      </select>
-      <button onClick={() => setShowAddForm(true)}>Add Employee</button>
+  const totalPages = Math.ceil(filteredData.length / pageSize);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
+  return (
+    <div className="search-filter">
+      <div className="controls">
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search name, email, phone"
+        />
+        <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+          <option value="all">All</option>
+          <option value="Software Engineer">Software Engineer</option>
+          <option value="Project Manager">Project Manager</option>
+          <option value="Data Analyst">Data Analyst</option>
+          <option value="Backend Developer">Backend Developer</option>
+          <option value="UI/UX Designer">UI/UX Designer</option>
+        </select>
+        <select value={sorting} onChange={(e) => setSorting(e.target.value)}>
+          <option value="select">Select</option>
+          <option value="name">Name</option>
+          <option value="salary">Salary</option>
+        </select>
+        <button className="btn-add" onClick={() => setShowAddForm(true)}>
+          Add Employee
+        </button>
+      </div>
+
       {showAddForm && (
         <EmployeeForm
           onSubmit={(data) => {
@@ -74,11 +93,32 @@ const SearchFilter = ({ employees = [], onDelete, onPost, onUpdate }) => {
           onCancel={() => setEditingEmployee(null)}
         />
       )}
+
       <EmployeeTable
-        employees={filteredData}
+        employees={paginatedData}
         onDelete={onDelete}
         onUpdate={setEditingEmployee}
       />
+
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

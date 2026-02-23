@@ -1,6 +1,6 @@
 const EmployeeTable = ({ employees = [], onDelete, onUpdate }) => {
   return (
-    <table>
+    <table className="employee-table">
       <thead>
         <tr>
           <th>id</th>
@@ -10,27 +10,30 @@ const EmployeeTable = ({ employees = [], onDelete, onUpdate }) => {
           <th>designation</th>
           <th>salary</th>
           <th>created at</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         {employees &&
-          employees.map((emp) => {
-            return (
-              <tr key={emp.id}>
-                <td>{emp.id}</td>
-                <td>{emp.name}</td>
-                <td>{emp.email}</td>
-                <td>{emp.phone}</td>
-                <td>{emp.designation}</td>
-                <td>{emp.salary}</td>
-                <td>{emp.created_at}</td>
-                <td>
-                  <button onClick={() => onUpdate(emp)}>Edit</button>
-                  <button onClick={() => onDelete(emp.id)}>Delete</button>
-                </td>
-              </tr>
-            );
-          })}
+          employees.map((emp, index) => (
+            <tr key={emp.id}>
+              <td>{index + 1}</td>
+              <td>{emp.name}</td>
+              <td>{emp.email}</td>
+              <td>{emp.phone}</td>
+              <td>{emp.designation}</td>
+              <td>{emp.salary}</td>
+              <td>{new Date(emp.created_at).toISOString().split("T")[0]}</td>
+              <td>
+                <button className="btn-edit" onClick={() => onUpdate(emp)}>
+                  Edit
+                </button>
+                <button className="btn-delete" onClick={() => onDelete(emp.id)}>
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
       </tbody>
     </table>
   );
