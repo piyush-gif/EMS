@@ -14,9 +14,9 @@ const HomePage = () => {
     refetch,
   );
   return (
-    <div>
-      {loading && <p>Loading...</p>}
-      {error && <p>Error: {error}</p>}
+    <div className="homepage">
+      {loading && <p className="status">Loading...</p>}
+      {error && <p className="error">Error: {error}</p>}
       <SearchFilter
         employees={employees || []}
         onDelete={handleDelete}

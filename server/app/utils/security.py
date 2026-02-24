@@ -1,5 +1,6 @@
 from jose import JWTError, jwt
 from datetime import datetime, timedelta, timezone
+from fastapi import HTTPException, Header
 import os
 from dotenv import load_dotenv
 
@@ -9,7 +10,6 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 REFRESH_TOKEN_EXPIRE_DAYS = 7
-
 
 
 def create_access_token(data: dict):
@@ -30,3 +30,13 @@ def verify_token(token: str):
         return payload
     except JWTError:
         return None
+    
+
+def get_current_user(authorization: str = Header(...)):
+    token = authorization.replace("Bearer ", "")
+    payload = verify_token(token)
+    
+    if not payload or payload.get("type") != "access":
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    
+    return payload

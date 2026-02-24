@@ -43,19 +43,25 @@ const Login = () => {
     }
   };
   return (
-    <div>
-      <input
-        value={email}
-        placeholder="email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        value={password}
-        type="password"
-        placeholder="password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Login</button>
+    <div className="login-page">
+      <div className="login-card">
+        <h2>Login</h2>
+        {error && <p className="error">{error}</p>}
+        <input
+          value={email}
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          value={password}
+          type="password"
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button disabled={loading} onClick={handleLogin}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
+      </div>
     </div>
   );
 };

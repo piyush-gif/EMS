@@ -5,6 +5,15 @@ import HomePage from "./HomePage";
 import NavBar from "./NavBar";
 import ProtectedRoute from "./ProtectedRoute";
 import Profile from "./Profile";
+import "./style/Register.css";
+import "./style/nav.css";
+import "./style/index.css";
+import "./style/EmployeeForm.css";
+import "./style/EmployeeTables.css";
+import "./style/Filter.css";
+import "./style/Homepage.css";
+import "./style/Profile.css";
+import "./style/Login.css";
 
 function App() {
   return (

@@ -10,12 +10,14 @@ const NavBar = () => {
   };
 
   return (
-    <nav>
+    <nav className="navbar">
       <Link to="/">HomePage</Link>
       <Link to="/profile">Profile</Link>
       <Link to="/register">Register</Link>
       <Link to="/login">Login</Link>
-      <button onClick={handleLogout}>Logout</button>
+      <button className="btn-logout" onClick={handleLogout}>
+        Logout
+      </button>
     </nav>
   );
 };

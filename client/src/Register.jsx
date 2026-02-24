@@ -49,37 +49,39 @@ const Register = () => {
     }
   };
   return (
-    <div>
-      {error && <p>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          name="name"
-          value={form.name}
-          placeholder="Name"
-          onChange={handleChange}
-        />
-        <input
-          name="email"
-          value={form.email}
-          placeholder="Email"
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          name="password"
-          value={form.password}
-          placeholder="Password"
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          value={form.confirmPassword}
-          placeholder="Confirm Password"
-          onChange={handleChange}
-        />
-        <button type="submit">Register</button>
-      </form>
+    <div className="register-page">
+      <div className="register-card">
+        {error && <p className="error">{error}</p>}
+        <form className="register-form" onSubmit={handleSubmit}>
+          <input
+            name="name"
+            value={form.name}
+            placeholder="Name"
+            onChange={handleChange}
+          />
+          <input
+            name="email"
+            value={form.email}
+            placeholder="Email"
+            onChange={handleChange}
+          />
+          <input
+            type="password"
+            name="password"
+            value={form.password}
+            placeholder="Password"
+            onChange={handleChange}
+          />
+          <input
+            type="password"
+            name="confirmPassword"
+            value={form.confirmPassword}
+            placeholder="Confirm Password"
+            onChange={handleChange}
+          />
+          <button type="submit">Register</button>
+        </form>
+      </div>
     </div>
   );
 };

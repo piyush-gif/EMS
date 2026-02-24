@@ -30,11 +30,14 @@ const Profile = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div>
+    <div className="profile">
       <h2>Profile</h2>
       <p>Name: {profile?.name}</p>
       <p>Email: {profile?.email}</p>
-      <p>Member since: {new Date(profile?.created_at).toLocaleDateString()}</p>
+      <p>
+        Member since:{" "}
+        {new Date(profile?.created_at).toISOString().split("T")[0]}
+      </p>
     </div>
   );
 };
