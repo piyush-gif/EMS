@@ -5,3 +5,7 @@ class UserRegister(BaseModel):
   email: EmailStr
   password: str = Field(..., min_length=6)
 
+
+class ForgotPassword(BaseModel):
+    email: EmailStr
+

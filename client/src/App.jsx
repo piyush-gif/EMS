@@ -5,6 +5,7 @@ import HomePage from "./HomePage";
 import NavBar from "./NavBar";
 import ProtectedRoute from "./ProtectedRoute";
 import Profile from "./Profile";
+import ForgotPassword from "./ForgotPassword";
 import "./style/Register.css";
 import "./style/nav.css";
 import "./style/index.css";
@@ -22,6 +23,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot" element={<ForgotPassword />} />
         <Route
           path="/"
           element={

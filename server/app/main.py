@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, Header
 from database import engine, get_db
 from models import Base, User, Employee
 from sqlalchemy.orm import Session
-from schemas.user import UserRegister
+from schemas.user import UserRegister, ForgotPassword
 import bcrypt
 from schemas.employee import UserLogin, EmployeeCreate, EmployeeUpdate
 from utils.security import create_access_token, create_refresh_token, verify_token , get_current_user
@@ -57,6 +57,13 @@ def post_login(user: UserLogin, db: Session = Depends(get_db)):
         "refresh_token": refresh_token,
         "token_type": "bearer"
     }
+
+@app.post("/forgot-password")
+def forgot_password(data: ForgotPassword, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == data.email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"message": "Password reset link sent to your email (simulation)."}
 
 
 @app.post("/refresh")

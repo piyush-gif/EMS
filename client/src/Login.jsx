@@ -61,6 +61,9 @@ const Login = () => {
         <button disabled={loading} onClick={handleLogin}>
           {loading ? "Logging in..." : "Login"}
         </button>
+        <p>
+          <a href="/forgot">Forgot password?</a>
+        </p>
       </div>
     </div>
   );
